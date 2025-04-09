@@ -2,7 +2,6 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 添加 viewport -->
   <title>表情识别提示</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
@@ -19,10 +18,8 @@
 
     .container {
       position: relative;
-      width: 100%; /* 改为自适应 */
-      height: 100%; /* 改为自适应 */
-      max-width: 1080px;
-      max-height: 1920px;
+      width: 1080px;
+      height: 1920px;
     }
 
     video, canvas {
@@ -36,13 +33,14 @@
     }
 
     #cameraVideo { z-index: 1; transform: scaleX(-1); }
+    #waitVideo { z-index: 2; }
     #step2Video { z-index: 3; opacity: 0; }
     canvas { z-index: 4; }
 
     .instruction {
       position: absolute;
       top: 43%;
-      left: 50%; /* 调整为居中 */
+      left: 39.5%;
       transform: translateX(-50%);
       color: #00ffff;
       font-size: 3em;
@@ -84,7 +82,10 @@
 </head>
 <body>
   <div class="container">
-    <video id="cameraVideo" autoplay muted playsinline></video> <!-- 添加 playsinline -->
+    <video id="cameraVideo" autoplay muted></video>
+    <video id="waitVideo" autoplay muted loop playsinline>
+      <source src="videos/wait.mp4" type="video/mp4">
+    </video>
     <video id="step2Video" muted playsinline>
       <source src="videos/step2.mp4" type="video/mp4">
     </video>
@@ -101,43 +102,24 @@
   <script>
     async function setupCamera() {
       const video = document.getElementById('cameraVideo');
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "user", // 强制使用前置摄像头
-            // 移除具体分辨率，交给设备自适应
-          },
-          audio: false
-        });
-        video.srcObject = stream;
-
-        const videoTrack = stream.getVideoTracks()[0];
-        console.log("当前摄像头:", videoTrack.label);
-        alert("当前摄像头: " + videoTrack.label); // 调试用
-      } catch (err) {
-        console.error("摄像头启用失败:", err);
-        alert("摄像头启用失败: " + err.message);
-      }
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 1080 }, height: { ideal: 1920 } },
+        audio: false
+      });
+      video.srcObject = stream;
       return new Promise(resolve => {
         video.onloadedmetadata = () => {
           video.play();
-          console.log("视频分辨率:", video.videoWidth, video.videoHeight);
           resolve(video);
         };
       });
     }
 
     async function loadModels() {
-      try {
-        await Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
-          faceapi.nets.faceLandmark68Net.loadFromUri('./models')
-        ]);
-        console.log("模型加载成功");
-      } catch (err) {
-        console.error("模型加载失败:", err);
-        alert("模型加载失败: " + err.message);
-      }
+      await Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri('./models'),
+        faceapi.nets.faceLandmark68Net.loadFromUri('./models')
+      ]);
     }
 
     async function detectFaces() {
@@ -145,17 +127,21 @@
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
 
+      const waitVideo = document.getElementById('waitVideo');
       const step2Video = document.getElementById('step2Video');
       const instruction = document.getElementById('instruction');
       const progressContainer = document.getElementById('progressContainer');
       const progressBar = document.getElementById('progressBar');
 
+      // 设置 canvas 尺寸 = video 原始尺寸
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
+
       faceapi.matchDimensions(canvas, { width: canvas.width, height: canvas.height });
 
       let faceDetectedFrames = 0;
       const requiredFrames = 50;
+      let lastFaceDetectionTime = Date.now();
       let progressCompleted = false;
 
       step2Video.addEventListener('ended', () => {
@@ -181,20 +167,24 @@
         ctx.translate(-canvas.width, 0);
 
         if (resizedDetections.length > 0) {
+          lastFaceDetectionTime = Date.now();
+          waitVideo.style.opacity = '0';
           faceDetectedFrames++;
 
           resizedDetections.forEach(result => {
             const box = result.detection.box;
 
+            // 绘制发光人脸框
             ctx.strokeStyle = 'rgba(0, 255, 255, 0.8)';
             ctx.lineWidth = 4;
             ctx.shadowColor = '#00ffff';
             ctx.shadowBlur = 15;
             ctx.strokeRect(box.x, box.y, box.width, box.height);
 
+            // 绘制发光关键点
             result.landmarks.positions.forEach(pt => {
               ctx.beginPath();
-              const radius = canvas.width * 0.0025;
+              const radius = canvas.width * 0.0025; // 自适应大小
               ctx.arc(pt.x, pt.y, radius, 0, 2 * Math.PI);
               ctx.fillStyle = '#ff00ff';
               ctx.shadowColor = '#ff00ff';
@@ -202,8 +192,12 @@
               ctx.fill();
             });
           });
+
         } else {
-          faceDetectedFrames = 0;
+          if (Date.now() - lastFaceDetectionTime > 2000) {
+            waitVideo.style.opacity = '1';
+            faceDetectedFrames = 0;
+          }
         }
 
         ctx.restore();
@@ -215,6 +209,7 @@
           progressCompleted = true;
           instruction.style.opacity = '0';
           progressContainer.style.opacity = '0';
+          waitVideo.style.opacity = '0';
           canvas.style.opacity = '0';
           video.style.opacity = '0';
           step2Video.currentTime = 0;
@@ -224,11 +219,12 @@
           setTimeout(() => {
             instruction.style.display = 'none';
             progressContainer.style.display = 'none';
+            waitVideo.style.display = 'none';
             canvas.style.display = 'none';
             video.style.display = 'none';
           }, 800);
         }
-      }, 100); // 可尝试改为 200ms 以降低性能压力
+      }, 100);
     }
 
     async function main() {
@@ -237,8 +233,7 @@
         await loadModels();
         detectFaces();
       } catch (err) {
-        console.error("初始化失败:", err);
-        alert("初始化失败: " + err.message);
+        console.error("初始化失败", err);
       }
     }
 
