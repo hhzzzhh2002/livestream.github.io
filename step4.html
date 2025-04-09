@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>假直播间PK网站 - 竖屏版</title>
+    <link rel="icon" href="data:,">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fff;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 1080px;
+            height: 1920px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 30, 0.95));
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+        }
+        .top-section {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .header {
+            width: 40%;
+            height: 80px;
+            background: linear-gradient(135deg, #4285f4, #34a0f2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 40px;
+            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+            transform: perspective(500px) rotateX(5deg);
+            transition: all 0.3s ease;
+        }
+        .header:hover {
+            transform: perspective(500px) rotateX(0deg) translateY(-5px);
+            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.4);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 48px;
+            color: #fff;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
+        }
+        .image-grid {
+            width: 40%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .image-grid img {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #8e24aa, #9c27b0);
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 4px 10px rgba(142, 36, 170, 0.3);
+            transition: all 0.3s ease;
+            transform: rotate(-2deg);
+        }
+        .image-grid img:nth-child(even) {
+            transform: rotate(2deg);
+        }
+        .image-grid img:hover {
+            transform: scale(1.05) rotate(0);
+            box-shadow: 0 8px 20px rgba(142, 36, 170, 0.4);
+        }
+        .content {
+            position: absolute;
+            top: 120px;
+            left: 0;
+            width: 100%;
+            height: 1000px;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 1;
+        }
+        .live-window {
+            width: 65%;
+            height: 109.8%;
+            background-color: #222;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 0 0 3px rgba(76, 175, 80, 0.5);
+            transition: all 0.3s ease;
+        }
+        .live-window:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), inset 0 0 0 3px rgba(76, 175, 80, 0.8);
+            transform: translateY(-5px);
+        }
+        .video-container {
+            width: 33%;
+            height: 110.5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+        .video-window {
+            width: 100%;
+            height: 32%;
+            background-color: #222;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25), inset 0 0 0 3px rgba(255, 235, 59, 0.5);
+            transition: all 0.3s ease;
+        }
+        .video-window:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), inset 0 0 0 3px rgba(255, 235, 59, 0.8);
+            transform: translateY(-3px) scale(1.02);
+        }
+        .video-window video, .live-window video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 25px;
+        }
+        #live-video {
+            transform: scaleX(-1);
+        }
+        .decorations-inside {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            color: #ff0;
+            font-size: 24px;
+            z-index: 2;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .progress-bar {
+            position: absolute;
+            top: 1200px;
+            left: 20px;
+            width: calc(100% - 40px);
+            height: 50px;
+            background: linear-gradient(to right, rgba(204, 204, 204, 0.2), rgba(204, 204, 204, 0.3));
+            border: none;
+            border-radius: 25px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            z-index: 1;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a, #cddc39, #ffeb3b);
+            width: 0%;
+            transition: width 0.5s linear;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 25px;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        .progress-text {
+            position: relative;
+            z-index: 2;
+            font-size: 24px;
+            color: #fff;
+            margin-left: 20px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .progress-emoji {
+            position: absolute;
+            z-index: 2;
+            font-size: 58px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: left 0.5s linear;
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 700px;
+            background-color: transparent;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .barrage {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .barrage div {
+            max-width: 80%;
+            height: auto;
+            min-height: 50px;
+            color: #fff;
+            font-size: 32px;
+            line-height: 50px;
+            text-align: left;
+            padding: 0 28px;
+            box-sizing: border-box;
+            position: absolute;
+            left: 0;
+            animation: scrollBarrage 12s linear forwards;
+            background-color: rgba(var(--bg-r), var(--bg-g), var(--bg-b), 0.7);
+            border-radius: 25px;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes scrollBarrage {
+            0% {
+                transform: translateY(650px);
+                opacity: 1;
+                background-color: rgba(var(--bg-r), var(--bg-g), var(--bg-b), 0.7);
+            }
+            50% {
+                transform: translateY(250px);
+                opacity: 1;
+            }
+            85% {
+                transform: translateY(50px);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-50px);
+                opacity: 0;
+                background-color: rgba(0, 0, 0, 0.3);
+            }
+        }
+        .emoji {
+            position: absolute;
+            font-size: 40px;
+            z-index: 10;
+            animation: fall 2.6s linear forwards;
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.3));
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(-10deg); opacity: 1; }
+            50% { transform: translateY(600px) rotate(5deg); opacity: 1; }
+            100% { transform: translateY(1200px) rotate(10deg); opacity: 0; }
+        }
+        .countdown {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1000px;
+            color: #fff;
+            opacity: 1;
+            transition: opacity 0.5s;
+            z-index: 1000;
+            text-align: center;
+            width: 100%;
+            text-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+        }
+        @keyframes breathe {
+            0% { transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+            50% { transform: translate(-50%, -50%) scale(1.1); filter: blur(2px); }
+            100% { transform: translate(-50%, -50%) scale(1); filter: blur(0px); }
+        }
+        .breathe-effect {
+            animation: breathe 1.5s infinite;
+        }
+        .capture-box {
+            position: absolute;
+            border: 2px solid;
+            z-index: 5;
+            animation: moveBox 3s infinite linear;
+            pointer-events: none;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        @keyframes moveBox {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, 50px) rotate(2deg); }
+            50% { transform: translate(-50px, -50px) rotate(-2deg); }
+            75% { transform: translate(50px, -50px) rotate(1deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* 商品展示区样式 - 增强设计感 */
+        .product-showcase {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 300px;
+            background: rgba(15, 15, 20, 0.85);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 50px rgba(255, 107, 107, 0.2);
+            z-index: 50;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+        }
+        .product-showcase:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(255, 107, 107, 0.1) 30%,
+                transparent 50%,
+                rgba(142, 45, 226, 0.1) 70%,
+                transparent 100%
+            );
+            transform: rotate(30deg);
+            animation: shimmer 6s infinite linear;
+            z-index: -1;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        .product-showcase:hover {
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 80px rgba(255, 107, 107, 0.3);
+        }
+        .product-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+        }
+        .product-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 22px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            transform: rotate(-5deg);
+            transition: all 0.3s ease;
+        }
+        .product-showcase:hover .product-icon {
+            transform: rotate(5deg) scale(1.1);
+        }
+        .product-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            flex-grow: 1;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+        .product-thumbnail {
+            width: 100%;
+            height: 180px;
+            border-radius: 20px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.98) perspective(500px) rotateX(2deg);
+        }
+        .product-showcase:hover .product-thumbnail {
+            transform: scale(1.02) perspective(500px) rotateX(0deg);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+        .product-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .product-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF8E53;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            position: relative;
+            display: inline-block;
+        }
+        .product-price:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #FF6B6B, transparent);
+            border-radius: 2px;
+        }
+        .product-button {
+            display: block;
+            width: 100%;
+            padding: 12px 0;
+            background: linear-gradient(135deg, #4A00E0, #8E2DE2);
+            color: white;
+            text-align: center;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 5px 15px rgba(74, 0, 224, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .product-button:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0.1) 30%,
+                transparent 50%,
+                rgba(255, 255, 255, 0.1) 70%,
+                transparent 100%
+            );
+            transform: rotate(30deg);
+            animation: buttonShimmer 3s infinite linear;
+            z-index: 1;
+        }
+        @keyframes buttonShimmer {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        .product-button span {
+            position: relative;
+            z-index: 2;
+        }
+        .product-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
+            transform: rotate(5deg);
+            transition: all 0.3s ease;
+        }
+        .product-showcase:hover .product-tag {
+            transform: rotate(-5deg) scale(1.05);
+            box-shadow: 0 8px 15px rgba(255, 107, 107, 0.4);
+        }
+        .product-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* 添加背景图案 */
+        .container:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 30%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* 添加光晕效果 */
+        .glow-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(74, 0, 224, 0.2) 0%, transparent 70%);
+            filter: blur(30px);
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatGlow 10s infinite alternate ease-in-out;
+        }
+        
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        /* 添加更多动态效果 */
+        .live-window:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 40px;
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), transparent, rgba(76, 175, 80, 0.3));
+            z-index: -1;
+            animation: borderGlow 3s infinite alternate ease-in-out;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .live-window:hover:before {
+            opacity: 1;
+        }
+        
+        @keyframes borderGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 新添加的查看结果按钮样式 */
+        .result-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 2000;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .result-button:hover {
+            transform: translate(-50%, -55%);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.7);
+        }
+        
+        .result-button.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 倒计时样式 */
+        .redirect-countdown {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #fff;
+            text-align: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease;
+        }
+        
+        .redirect-countdown.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 添加光晕效果 -->
+        <div class="glow-effect" style="top: 30%; left: 20%;"></div>
+        <div class="glow-effect" style="top: 60%; right: 20%; background: radial-gradient(circle, rgba(255, 107, 107, 0.2) 0%, transparent 70%);"></div>
+        
+        <div class="top-section">
+            <div class="header">
+                <h1>我不是商品</h1>
+            </div>
+            <div class="image-grid">
+                <img src="asset/1.png" alt="Image 1">
+                <img src="asset/2.png" alt="Image 2">
+                <img src="asset/3.png" alt="Image 3">
+                <img src="asset/4.png" alt="Image 4">
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="live-window" id="live-window">
+                <div class="decorations-inside">实时窗口</div>
+                <video id="live-video" autoplay style="width: 100%; height: 100%;"></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+            </div>
+            <div class="video-container">
+                <div class="video-window">
+                    <div class="decorations-inside">视频 1</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="pk/1.mp4" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
+                </div>
+                <div class="video-window">
+                    <div class="decorations-inside">视频 2</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="pk/2.mp4" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
+                </div>
+                <div class="video-window">
+                    <div class="decorations-inside">视频 3</div>
+                    <video autoplay loop muted playsinline>
+                        <source src="pk/3.mp4" type="video/mp4">
+                        您的浏览器不支持视频播放。
+                    </video>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-bar" id="progress-bar">
+            <div class="progress" id="progress"></div>
+            <span class="progress-text" id="progress-text">0%</span>
+            <span class="progress-emoji" id="progress-emoji">😢</span>
+        </div>
+
+        <div class="footer">
+            <div class="barrage" id="barrageContainer"></div>
+            
+            <!-- 商品展示区 - 增强设计感 -->
+            <div class="product-showcase" id="productShowcase">
+                <div class="product-tag">限时特惠</div>
+                <div class="product-header">
+                    <div class="product-icon">🎭</div>
+                    <div class="product-title">数字身份定制</div>
+                </div>
+                <img id="productThumbnail" class="product-thumbnail" alt="数字身份定制">
+                <div class="product-stats">
+                    <span>👁️ 2.5万人浏览</span>
+                    <span>❤️ 98%好评</span>
+                </div>
+                <div class="product-description">定制专属数字身份，通过AI技术生成您的虚拟形象，打造独一无二的社交媒体个性。</div>
+                <div class="product-price">¥ 299.00</div>
+                <button class="product-button" id="productButton"><span>立即查看详情</span></button>
+            </div>
+        </div>
+
+        <div class="countdown" id="countdown"></div>
+        
+        <!-- 新添加的查看结果按钮 -->
+        <button class="result-button" id="resultButton">点击查看最终售卖情况</button>
+        
+        <!-- 新添加的倒计时提示 -->
+        <div class="redirect-countdown" id="redirectCountdown"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('live-video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const container = document.querySelector('.container');
+        const liveWindow = document.getElementById('live-window');
+        const progressBar = document.getElementById('progress');
+        const progressText = document.getElementById('progress-text');
+        const progressEmoji = document.getElementById('progress-emoji');
+        const progressBarContainer = document.getElementById('progress-bar');
+        const countdownElement = document.getElementById('countdown');
+        const emojis = ['😀', '😂', '🥳', '🎉', '💪', '⭐', '🚀', '🎈'];
+        let collectedEmojis = 0;
+        const totalEmojisToCollect = 80;
+        let isGameOver = false;
+        let countdownStarted = false;
+        
+        // 新添加的变量
+        const resultButton = document.getElementById('resultButton');
+        const redirectCountdown = document.getElementById('redirectCountdown');
+        let isWin = false;
+        let redirectTimer = null;
+        let secondsLeft = 10;
+
+        canvas.width = 700;
+        canvas.height = 1000;
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                detectMotion();
+            })
+            .catch(err => {
+                console.error("无法访问摄像头: ", err);
+                video.insertAdjacentHTML('afterend', '<p>无法访问摄像头，请检查权限</p>');
+            });
+
+        const barrageContainer = document.getElementById('barrageContainer');
+        const userNames = ['粉丝1', '小可爱', '老铁666', 'PK王', '冲鸭', '直播迷', '支持者', '路人甲', '铁粉', '气氛组'];
+        const pkMessages = [
+            "挥手挥手就可以！冲啊！！",
+            "主播动作幅度再大一点！！，PK不能输啊！",
+            "这波操作太秀了，给我冲到第一吧！",
+            "666！",
+            "对面怎么这么强啊？快反击！",
+            "主播！别放弃啊！",
+            "这PK笑死我了！",
+            "快挥挥手或者跳几下！",
+            "这PK太刺激了，主播稳住，再坚持一下，动作大一点！别放弃啊！心跳都加速了！",
+            "礼物刷起来，支持主播赢这场PK吧！",
+            "对面是不是不行了？主播一鼓作气，趁胜追击就赢啦！",
+            "主播技术流啊，太棒了！",
+            "这局必须赢，主播加油加油！冲冲冲别停下来！",
+            "别怂，就是干！！",
+            "全场最佳毫无悬念！加油！要是动作幅度再大一点就好了！！"
+        ];
+
+        // 商品相关变量和函数
+        const productButton = document.getElementById('productButton');
+        const productThumbnail = document.getElementById('productThumbnail');
+        
+        // 设置商品缩略图（使用base64编码的图片数据，避免文件路径问题）
+        // 这里会在脚本加载时动态生成一个示例缩略图
+        function generatePlaceholderImage() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 180;
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, 300, 180);
+            gradient.addColorStop(0, '#FF6B6B');
+            gradient.addColorStop(1, '#4A00E0');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 300, 180);
+            
+            // 添加纹理
+            for (let i = 0; i < 20; i++) {
+                ctx.beginPath();
+                ctx.arc(
+                    Math.random() * 300,
+                    Math.random() * 180,
+                    Math.random() * 30 + 5,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.1})`;
+                ctx.fill();
+            }
+            
+            // 绘制文字
+            ctx.font = 'bold 24px Arial';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 2;
+            ctx.shadowOffsetY = 2;
+            ctx.fillText('数字身份定制', 150, 70);
+            ctx.font = '18px Arial';
+            ctx.fillText('点击查看详情', 150, 110);
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        // 设置默认缩略图
+        productThumbnail.src = generatePlaceholderImage();
+        
+        // 商品点击事件 - 跳转到数字身份定制页面
+        productButton.addEventListener('click', function() {
+            // 这里使用相对路径，假设您的数字身份定制页面在同一目录下
+            window.location.href = 'digital_identity.html';
+        });
+        
+        // 也可以点击缩略图跳转
+        productThumbnail.addEventListener('click', function() {
+            window.location.href = 'digital_identity.html';
+        });
+        
+        // 尝试加载真实缩略图（如果存在）
+        function loadProductThumbnail() {
+            const img = new Image();
+            img.onload = function() {
+                productThumbnail.src = this.src;
+            };
+            img.onerror = function() {
+                console.log("无法加载商品缩略图，使用默认图像");
+                // 已经设置了默认图像，所以这里不需要额外操作
+            };
+            // 尝试加载商品缩略图（使用相对路径）
+            img.src = 'product_thumbnail.png';
+        }
+        
+        // 尝试加载缩略图
+        loadProductThumbnail();
+        
+        // 添加商品弹窗消息到弹幕
+        function addProductBarrages() {
+            const productMessages = [
+                "这个数字身份定制也太酷了吧！",
+                "刚买了数字身份定制，效果超赞！",
+                "主播用的就是这个数字身份系统吗？好想要！",
+                "数字身份定制值得拥有，朋友们冲啊！",
+                "这个价格真的很划算了，我已经下单了！"
+            ];
+            
+            // 每隔一段时间添加一条商品相关弹幕
+            setInterval(() => {
+                const randomUser = userNames[Math.floor(Math.random() * userNames.length)];
+                const randomMessage = productMessages[Math.floor(Math.random() * productMessages.length)];
+                
+                const div = document.createElement('div');
+                div.textContent = `${randomUser}：${randomMessage}`;
+                div.style.top = `${Math.random() * 500}px`;
+                const r = 255;
+                const g = Math.floor(Math.random() * 150) + 100;
+                const b = Math.floor(Math.random() * 100);
+                div.style.setProperty('--bg-r', r);
+                div.style.setProperty('--bg-g', g);
+                div.style.setProperty('--bg-b', b);
+                barrageContainer.appendChild(div);
+                setTimeout(() => div.remove(), 12000);
+            }, 15000); // 每15秒添加一条商品弹幕
+        }
+        
+        // 启动商品弹幕
+        addProductBarrages();
+
+        let trackIndex = 0;
+        const trackHeight = 1000;
+
+        function generateBarrage() {
+            const div = document.createElement('div');
+            const randomUser = userNames[Math.floor(Math.random() * userNames.length)];
+            const randomMessage = pkMessages[Math.floor(Math.random() * pkMessages.length)];
+            div.textContent = `${randomUser}：${randomMessage}`;
+            div.style.top = `${trackIndex * trackHeight}px`;
+            const r = Math.floor(Math.random() * 256);
+            const g = Math.floor(Math.random() * 256);
+            const b = Math.floor(Math.random() * 256);
+            div.style.setProperty('--bg-r', r);
+            div.style.setProperty('--bg-g', g);
+            div.style.setProperty('--bg-b', b);
+            barrageContainer.appendChild(div);
+            setTimeout(() => div.remove(), 12000);
+            trackIndex = (trackIndex + 1) % 1;
+
+            const randomDelay = Math.floor(Math.random() * 1000) + 500;
+            setTimeout(generateBarrage, randomDelay);
+        }
+
+        for (let i = 0; i < 1; i++) {
+            generateBarrage();
+        }
+
+        // 生成彩色空心方框，仅限实时窗口
+        function generateCaptureBox() {
+            const box = document.createElement('div');
+            box.className = 'capture-box';
+            const width = Math.random() * 200 + 50; // 50-250px
+            const height = Math.random() * 200 + 50;
+            const maxLeft = 702 - width; // 实时窗口宽度65% ≈ 702px
+            const maxTop = 1098 - height; // 实时窗口高度109.8% ≈ 1098px
+            box.style.width = `${width}px`;
+            box.style.height = `${height}px`;
+            box.style.left = `${Math.random() * maxLeft + 20}px`; // +20px考虑content的padding
+            box.style.top = `${Math.random() * maxTop + 120}px`; // +120px考虑top偏移
+            
+            // 使用更艺术的颜色
+            const hue = Math.floor(Math.random() * 360);
+            box.style.borderColor = `hsl(${hue}, 80%, 60%)`;
+            box.style.borderWidth = '3px';
+            
+            liveWindow.appendChild(box); // 添加到实时窗口
+            setTimeout(() => box.remove(), 3000);
+        }
+
+        // 每200ms生成一个方框，仅在无动作时
+        setInterval(() => {
+            if (!countdownStarted) generateCaptureBox();
+        }, 200);
+
+        let prevFrame = null;
+        function detectMotion() {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const currentFrame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            let motionScore = 0;
+
+            if (prevFrame) {
+                const prevData = prevFrame.data;
+                const currData = currentFrame.data;
+                for (let i = 0; i < prevData.length; i += 4) {
+                    const diff = Math.abs(prevData[i] - currData[i]) +
+                                 Math.abs(prevData[i + 1] - currData[i + 1]) +
+                                 Math.abs(prevData[i + 2] - currData[i + 2]);
+                    motionScore += diff;
+                }
+                motionScore /= (canvas.width * canvas.height);
+            }
+
+            prevFrame = currentFrame;
+            generateEmojis(motionScore);
+
+            // 检测到动作时开始倒计时
+            if (motionScore >= 50 && !countdownStarted) {
+                startCountdown();
+            }
+
+            requestAnimationFrame(detectMotion);
+        }
+
+        function generateEmojis(motionScore) {
+            if (isGameOver) return;
+
+            const emojiCount = Math.min(Math.floor(motionScore / 50), 10);
+            for (let i = 0; i < emojiCount; i++) {
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = `${Math.random() * 100}%`;
+                emoji.style.top = '-50px';
+                // 添加随机旋转
+                emoji.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
+                container.appendChild(emoji);
+
+                const checkCollection = () => {
+                    const rect = emoji.getBoundingClientRect();
+                    const progressRect = progressBarContainer.getBoundingClientRect();
+                    if (rect.bottom >= progressRect.top && rect.top <= progressRect.bottom && !isGameOver) {
+                        collectedEmojis += 2;
+                        const progressPercentage = Math.min((collectedEmojis / totalEmojisToCollect) * 100, 100);
+                        progressBar.style.width = `${progressPercentage}%`;
+                        progressText.textContent = `${Math.round(progressPercentage)}%`;
+
+                        // 更新表情位置，100%时停在右边
+                        progressEmoji.style.left = progressPercentage >= 100 ? `${progressBarContainer.offsetWidth - 60}px` : `calc(${progressPercentage}% - 20px)`;
+                        if (progressPercentage >= 100) {
+                            progressEmoji.textContent = '🥳';
+                        } else if (progressPercentage >= 50) {
+                            progressEmoji.textContent = '💪';
+                        } else {
+                            progressEmoji.textContent = '😢';
+                        }
+
+                        emoji.remove();
+                    }
+                };
+                const interval = setInterval(checkCollection, 100);
+                setTimeout(() => {
+                    clearInterval(interval);
+                    emoji.remove();
+                }, 5000);
+            }
+        }
+
+        countdownElement.textContent = '开始动起来';
+        countdownElement.style.fontSize = '200px';
+        countdownElement.style.opacity = 1;
+        countdownElement.classList.add('breathe-effect');
+
+        function startCountdown() {
+            countdownStarted = true;
+            countdownElement.classList.remove('breathe-effect');
+            countdownElement.style.opacity = 0;
+            setTimeout(() => {
+                let timeLeft = 9;
+                const countdownInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        countdownElement.style.fontSize = '1000px';
+                        countdownElement.style.opacity = 1;
+                        countdownElement.textContent = timeLeft;
+                        setTimeout(() => countdownElement.style.opacity = 0, 250);
+                        timeLeft--;
+                    } else {
+                        clearInterval(countdownInterval);
+                        countdownElement.style.display = 'none';
+                        if (collectedEmojis >= totalEmojisToCollect) {
+                            countdownElement.textContent = 'Win!';
+                            countdownElement.style.opacity = 1;
+                            countdownElement.style.display = 'block';
+                            countdownElement.style.fontSize = '200px';
+                            isWin = true;
+                        } else {
+                            countdownElement.textContent = 'Lose!';
+                            countdownElement.style.opacity = 1;
+                            countdownElement.style.display = 'block';
+                            countdownElement.style.fontSize = '200px';
+                            isWin = false;
+                        }
+                        isGameOver = true;
+                        
+                        // 游戏结束后显示按钮和倒计时
+                        setTimeout(() => {
+                            showResultButton();
+                            startRedirectCountdown();
+                        }, 1000);
+                    }
+                }, 1000);
+            }, 500);
+        }
+        
+        // 添加鼠标跟随效果
+        document.addEventListener('mousemove', (e) => {
+            const glowElements = document.querySelectorAll('.glow-effect');
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+            
+            glowElements.forEach((glow, index) => {
+                const rect = container.getBoundingClientRect();
+                const containerX = rect.left + rect.width / 2;
+                const containerY = rect.top + rect.height / 2;
+                
+                const offsetX = (mouseX - containerX) / 20;
+                const offsetY = (mouseY - containerY) / 20;
+                
+                // 添加一些随机性，使每个光晕移动不同
+                const randomX = Math.sin(Date.now() / 1000 + index) * 20;
+                const randomY = Math.cos(Date.now() / 1000 + index) * 20;
+                
+                glow.style.transform = `translate(${offsetX + randomX}px, ${offsetY + randomY}px)`;
+            });
+        });
+        
+        // 新添加的函数 - 显示结果按钮
+        function showResultButton() {
+            resultButton.classList.add('visible');
+        }
+        
+        // 新添加的函数 - 开始倒计时自动跳转
+        function startRedirectCountdown() {
+            redirectCountdown.classList.add('visible');
+            secondsLeft = 10;
+            updateRedirectCountdown();
+            
+            redirectTimer = setInterval(() => {
+                secondsLeft--;
+                updateRedirectCountdown();
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(redirectTimer);
+                    redirectToResultPage();
+                }
+            }, 1000);
+        }
+        
+        // 新添加的函数 - 更新倒计时显示
+        function updateRedirectCountdown() {
+            redirectCountdown.textContent = `${secondsLeft}秒后自动跳转...`;
+        }
+        
+        // 新添加的函数 - 跳转到结果页面
+        function redirectToResultPage() {
+            if (isWin) {
+                window.location.href = 'poster_files/step5.html';
+            } else {
+                window.location.href = 'poster_files2/step6.html';
+            }
+        }
+        
+        // 新添加的事件监听器 - 按钮点击跳转
+        resultButton.addEventListener('click', function() {
+            clearInterval(redirectTimer);
+            redirectToResultPage();
+        });
+    </script>
+</body>
+</html>

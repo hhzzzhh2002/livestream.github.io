@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售失败海报</title>
+    <link rel="stylesheet" href="failure-styles.css">
+</head>
+<body>
+    <div class="poster-container">
+        <!-- 顶部文字区域 -->
+        <div class="top-text-container">
+            <div class="pixel-text" id="text-deal">销售业绩</div>
+            <div class="pixel-text" id="text-record">历史新低</div>
+        </div>
+
+        <!-- 中间数字区域 -->
+        <div class="middle-text-container">
+            <div class="number-wrapper">
+                <span class="pixel-text" id="text-number">0</span>
+                <span class="pixel-text" id="text-unit">件</span>
+            </div>
+        </div>
+        
+        <!-- 失败文字区域 -->
+        <div class="failure-text-container">
+            <div class="pixel-text" id="text-failure">销售失败</div>
+            <div class="sad-face" id="sad-face">😢</div>
+        </div>
+
+        <!-- 底部横幅区域 -->
+        <div class="bottom-banner-container">
+            <div class="rays rays-top">
+                <div class="ray ray-1"></div>
+                <div class="ray ray-2"></div>
+                <div class="ray ray-3"></div>
+                <div class="ray ray-4"></div>
+                <div class="ray ray-5"></div>
+                <div class="ray ray-6"></div>
+                <div class="ray ray-7"></div>
+            </div>
+            <div class="banner">
+                <div class="pixel-text" id="text-congrats">销售目标未达成</div>
+            </div>
+            <div class="rays rays-bottom">
+                <div class="ray ray-1"></div>
+                <div class="ray ray-2"></div>
+                <div class="ray ray-3"></div>
+                <div class="ray ray-4"></div>
+                <div class="ray ray-5"></div>
+                <div class="ray ray-6"></div>
+                <div class="ray ray-7"></div>
+            </div>
+        </div>
+
+        <!-- 雨云容器 - 将包含多个雨云 -->
+        <div id="clouds-container"></div>
+    </div>
+
+    <!-- 引入脚本 -->
+    <script src="failure-scripts.js"></script>
+</body>
+</html>

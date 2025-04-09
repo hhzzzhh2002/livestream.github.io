@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>数字身份定制 - 专属虚拟形象</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;800&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 1080px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        header {
+            padding: 30px 0;
+            text-align: center;
+            background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header h1 {
+            font-size: 48px;
+            margin: 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        header p {
+            font-size: 20px;
+            margin: 10px 0 0;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></svg>');
+            opacity: 0.3;
+            z-index: 1;
+        }
+        
+        .product-showcase {
+            display: flex;
+            padding: 50px 0;
+            background-color: #111;
+        }
+        
+        .product-image {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .product-image img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 3px solid #FF6B6B;
+        }
+        
+        .product-info {
+            flex: 1;
+            padding: 20px 40px;
+        }
+        
+        .product-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #FF8E53;
+        }
+        
+        .product-description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .product-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #FF6B6B;
+            margin-bottom: 30px;
+        }
+        
+        .product-features {
+            margin-bottom: 30px;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4A00E0, #8E2DE2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        
+        .feature-text {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .feature-description {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #4A00E0, #8E2DE2);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(74, 0, 224, 0.4);
+        }
+        
+        .gallery {
+            padding: 50px 0;
+            text-align: center;
+            background-color: #0a0a0a;
+        }
+        
+        .gallery h2 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .gallery h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .gallery-item-overlay {
+            transform: translateY(0);
+        }
+        
+        .gallery-item-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .gallery-item-description {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .testimonials {
+            padding: 50px 0;
+            background-color: #111;
+            text-align: center;
+        }
+        
+        .testimonials h2 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .testimonials h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #4A00E0, #8E2DE2);
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .testimonial {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: left;
+            position: relative;
+        }
+        
+        .testimonial:before {
+            content: '"';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 80px;
+            color: rgba(255, 255, 255, 0.1);
+            font-family: serif;
+        }
+        
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .testimonial-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        
+        .testimonial-info {
+            flex: 1;
+        }
+        
+        .testimonial-name {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-role {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .faq {
+            padding: 50px 0;
+            background-color: #0a0a0a;
+        }
+        
+        .faq h2 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .faq h2:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            background-color: #1a1a1a;
+            padding: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-question:after {
+            content: '+';
+            font-size: 20px;
+        }
+        
+        .faq-answer {
+            background-color: #222;
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+        
+        .faq-item.active .faq-question:after {
+            content: '-';
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 1000px;
+        }
+        
+        footer {
+            padding: 30px 0;
+            text-align: center;
+            background-color: #000;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .footer-link {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+        
+        .footer-link:hover {
+            opacity: 1;
+        }
+        
+        .copyright {
+            opacity: 0.5;
+            font-size: 14px;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(90deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.6);
+        }
+        
+        /* 生成的图片样式 */
+        .generated-image {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, #4A00E0, #8E2DE2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .generated-image:before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/></svg>');
+            animation: backgroundScroll 20s linear infinite;
+        }
+        
+        @keyframes backgroundScroll {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-50%); }
+        }
+        
+        .generated-image-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href='index.html'">&larr;</button>
+    
+    <header>
+        <div class="header-bg"></div>
+        <div class="container">
+            <h1>数字身份定制</h1>
+            <p>打造专属于您的虚拟形象，定义未来社交媒体的个性</p>
+        </div>
+    </header>
+    
+    <section class="product-showcase">
+        <div class="container" style="display: flex;">
+            <div class="product-image">
+                <div class="generated-image">
+                    <div class="generated-image-text">
+                        <p>您的专属数字身份</p>
+                        <p style="font-size: 16px;">通过AI技术生成独一无二的虚拟形象</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h2 class="product-title">数字身份定制服务</h2>
+                <p class="product-description">
+                    在数字化时代，您的在线形象与现实身份同样重要。我们的数字身份定制服务利用先进的AI技术，
+                    为您创建独一无二的虚拟形象，让您在社交媒体和数字世界中脱颖而出。
+                </p>
+                <div class="product-price">¥ 299.00</div>
+                
+                <div class="product-features">
+                    <div class="feature">
+                        <div class="feature-icon">🎨</div>
+                        <div class="feature-text">
+                            <div class="feature-title">个性化定制</div>
+                            <div class="feature-description">根据您的喜好和风格，量身定制专属虚拟形象</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon">🔄</div>
+                        <div class="feature-text">
+                            <div class="feature-title">无限修改</div>
+                            <div class="feature-description">提供多次修改机会，直到您满意为止</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon">📱</div>
+                        <div class="feature-text">
+                            <div class="feature-title">全平台适配</div>
+                            <div class="feature-description">适用于各大社交媒体平台和数字应用</div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature">
+                        <div class="feature-icon">🔒</div>
+                        <div class="feature-text">
+                            <div class="feature-title">版权保障</div>
+                            <div class="feature-description">您拥有生成作品的完整版权，独家专属</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="cta-button">立即定制我的数字身份</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="gallery">
+        <div class="container">
+            <h2>客户案例展示</h2>
+            <p>这些都是我们为客户定制的数字身份，每一个都独一无二</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="generated-image" style="height: 300px; background: linear-gradient(45deg, #FF6B6B, #FF8E53);">
+                        <div class="generated-image-text">
+                            <p>社交媒体怪物</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <div class="gallery-item-title">社交媒体怪物</div>
+                        <div class="gallery-item-description">为社交媒体达人打造的独特数字身份</div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="generated-image" style="height: 300px; background: linear-gradient(45deg, #4A00E0, #8E2DE2);">
+                        <div class="generated-image-text">
+                            <p>数字奴隶</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <div class="gallery-item-title">数字奴隶</div>
+                        <div class="gallery-item-description">探索数字世界与现实边界的艺术作品</div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="generated-image" style="height: 300px; background: linear-gradient(45deg, #00C9FF, #92FE9D);">
+                        <div class="generated-image-text">
+                            <p>虚拟自我大师</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <div class="gallery-item-title">虚拟自我大师</div>
+                        <div class="gallery-item-description">为数字艺术家定制的专业形象</div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="generated-image" style="height: 300px; background: linear-gradient(45deg, #F857A6, #FF5858);">
+                        <div class="generated-image-text">
+                            <p>情感消费机器</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <div class="gallery-item-title">情感消费机器</div>
+                        <div class="gallery-item-description">探讨数字时代情感价值的概念作品</div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="generated-image" style="height: 300px; background: linear-gradient(45deg, #7F00FF, #E100FF);">
+                        <div class="generated-image-text">
+                            <p>元宇宙先驱</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <div class="gallery-item-title">元宇宙先驱</div>
+                        <div class="gallery-item-description">为元宇宙爱好者打造的前卫形象</div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item">
+                    <div class="generated-image" style="height: 300px; background: linear-gradient(45deg, #396afc, #2948ff);">
+                        <div class="generated-image-text">
+                            <p>数字游民</p>
+                        </div>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <div class="gallery-item-title">数字游民</div>
+                        <div class="gallery-item-description">自由职业者的数字化身份表达</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonials">
+        <div class="container">
+            <h2>客户评价</h2>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "数字身份定制服务彻底改变了我在社交媒体上的形象。这个独特的虚拟形象让我的账号关注量增长了300%，
+                        粉丝互动也更加活跃了。非常感谢团队的专业服务！"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👩</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">李小姐</div>
+                            <div class="testimonial-role">社交媒体博主</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "作为一名数字艺术家，我需要一个能代表我艺术风格的虚拟形象。这个服务不仅满足了我的需求，
+                        还超出了我的期望。现在我的作品和形象完美统一，品牌识别度大大提高。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👨</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">张先生</div>
+                            <div class="testimonial-role">数字艺术家</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "我一直在寻找能够表达我独特个性的方式，这个数字身份定制服务正是我需要的。
+                        现在我有了一个完全符合我风格的虚拟形象，在网络世界中脱颖而出。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">🧑</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">王同学</div>
+                            <div class="testimonial-role">大学生</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-text">
+                        "作为一家科技公司的创始人，我需要一个能代表我公司创新精神的数字形象。
+                        这个服务帮助我打造了完美的虚拟代言人，现在它已成为我们品牌的重要组成部分。"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">👨‍💼</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">陈总</div>
+                            <div class="testimonial-role">科技公司CEO</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="faq">
+        <div class="container">
+            <h2>常见问题</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">什么是数字身份定制服务？</div>
+                <div class="faq-answer">
+                    <p>数字身份定制服务是利用AI技术为您创建独特的虚拟形象，这个形象可以用于社交媒体、个人品牌建设、数字艺术创作等多种场景。我们会根据您的喜好、风格和需求，量身定制一个专属于您的数字身份。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">定制流程是怎样的？</div>
+                <div class="faq-answer">
+                    <p>定制流程包括：1) 填写需求问卷，告诉我们您的喜好和期望；2) 我们的设计师团队根据您的需求进行初步设计；3) 您提供反馈和修改意见；4) 我们进行调整直到您满意；5) 最终交付高质量的数字身份作品。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">我拥有最终作品的版权吗？</div>
+                <div class="faq-answer">
+                    <p>是的，您拥有我们为您创建的数字身份的完整版权。您可以在任何平台使用它，也可以将其用于商业目的，没有任何限制。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">需要多长时间完成一个数字身份定制？</div>
+                <div class="faq-answer">
+                    <p>通常情况下，从开始到完成一个数字身份定制需要7-10个工作日。如果您有特殊需求或者需要加急服务，请在订购时告知我们。</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">如果我对最终结果不满意怎么办？</div>
+                <div class="faq-answer">
+                    <p>我们提供无限次修改，直到您满意为止。如果经过多次修改后您仍然不满意，我们提供全额退款保证。客户满意度是我们最重视的。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#" class="footer-link">关于我们</a>
+                <a href="#" class="footer-link">服务条款</a>
+                <a href="#" class="footer-link">隐私政策</a>
+                <a href="#" class="footer-link">联系我们</a>
+            </div>
+            <div class="copyright">© 2025 数字身份定制服务. 保留所有权利.</div>
+        </div>
+    </footer>
+    
+    <script>
+        // FAQ 交互
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+        
+        // 返回按钮功能
+        document.querySelector('.back-button').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        
+        // CTA按钮功能
+        document.querySelector('.cta-button').addEventListener('click', () => {
+            alert('感谢您的兴趣！我们的定制服务即将开放，请稍后再试。');
+        });
+        
+        // 图库项目点击效果
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                alert('这是我们的客户案例，您也可以拥有类似的定制数字身份！');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+/* 像素风格字体 - 使用本地字体文件 */
+@font-face {
+    font-family: 'PixelFont';
+    src: url('fusion-pixel-10px-monospaced-zh_hans.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 基本样式和重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    user-select: none;
+}
+
+/* 海报容器 */
+.poster-container {
+    width: 1080px;
+    height: 1920px;
+    background-color: white;
+    position: relative;
+    /* overflow: hidden; */ /* 确保已注释或移除 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 像素风格文字基本样式 */
+.pixel-text {
+    font-family: 'PixelFont', 'Courier New', monospace;
+    color: black;
+    text-align: center;
+    letter-spacing: 2px;
+    image-rendering: pixelated;
+    font-weight: normal;
+    text-transform: uppercase;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* 顶部文字区域 */
+.top-text-container {
+    position: absolute;
+    top: 150px;
+    left: 100px; /* 修改处：右移 20px，从 80px 改为 100px */
+    z-index: 10;
+    text-align: left;
+}
+
+#text-deal {
+    font-size: 80px;
+    margin-bottom: 20px;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    text-align: left;
+    text-shadow: 
+        2px 2px 0 #000,
+        -2px 2px 0 #000,
+        2px -2px 0 #000,
+        -2px -2px 0 #000;
+}
+
+#text-record {
+    font-size: 80px;
+    letter-spacing: 4px;
+    line-height: 1.2;
+    text-align: left;
+    text-shadow: 
+        2px 2px 0 #000,
+        -2px 2px 0 #000,
+        2px -2px 0 #000,
+        -2px -2px 0 #000;
+}
+
+/* 中间数字区域 */
+.middle-text-container {
+    position: absolute;
+    top: 700px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.number-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+#text-number {
+    font-size: 240px;
+    letter-spacing: 8px;
+    text-shadow: 
+        4px 4px 0 #000,
+        -4px 4px 0 #000,
+        4px -4px 0 #000,
+        -4px -4px 0 #000;
+}
+
+#text-plus {
+    font-size: 120px;
+    position: relative;
+    top: -20px;
+    text-shadow: 
+        3px 3px 0 #000,
+        -3px 3px 0 #000,
+        3px -3px 0 #000,
+        -3px -3px 0 #000;
+}
+
+#text-unit {
+    font-size: 120px;
+    position: absolute;
+    right: 20px;
+    bottom: -100px;
+    text-shadow: 
+        3px 3px 0 #000,
+        -3px 3px 0 #000,
+        3px -3px 0 #000,
+        -3px -3px 0 #000;
+}
+
+/* 底部横幅区域（下移 40px） */
+.bottom-banner-container {
+    position: absolute;
+    bottom: 240px;
+    width: 80%;
+    left: 10%;
+    text-align: center;
+    z-index: 10;
+}
+
+.banner {
+    background-color: #FFFF00;
+    padding: 30px 0;
+    width: 100%;
+    position: relative;
+}
+
+#text-congrats {
+    font-size: 70px;
+    letter-spacing: 4px;
+    text-shadow: 
+        2px 2px 0 #000,
+        -2px 2px 0 #000,
+        2px -2px 0 #000,
+        -2px -2px 0 #000;
+    position: relative;
+    z-index: 2;
+}
+
+/* 放射线（细长条黄色矩形） */
+.rays {
+    width: 100%;
+    height: 100px;
+    position: relative;
+}
+
+.rays-top {
+    margin-bottom: 20px;
+}
+
+.rays-bottom {
+    margin-top: 100px;
+}
+
+.ray {
+    position: absolute;
+    background-color: #FFFF00;
+    height: 20px;
+    width: 100px;
+    transform-origin: center;
+    animation: blink 1s infinite;
+}
+
+.rays-top .ray-1 { left: 10%; transform: rotate(60deg); animation-delay: 0s; }
+.rays-top .ray-2 { left: 25%; transform: rotate(80deg); animation-delay: 0.2s; }
+.rays-top .ray-3 { left: 40%; transform: rotate(100deg); animation-delay: 0.4s; }
+.rays-top .ray-4 { left: 55%; transform: rotate(110deg); animation-delay: 0.6s; }
+.rays-top .ray-5 { left: 70%; transform: rotate(130deg); animation-delay: 0.8s; }
+.rays-top .ray-6 { left: 85%; transform: rotate(145deg); animation-delay: 1s; }
+.rays-top .ray-7 { left: 95%; transform: rotate(-60deg); animation-delay: 1.2s; }
+
+.rays-bottom .ray-1 { left: 10%; transform: rotate(130deg); animation-delay: 0s; }
+.rays-bottom .ray-2 { left: 25%; transform: rotate(110deg); animation-delay: 0.2s; }
+.rays-bottom .ray-3 { left: 40%; transform: rotate(90deg); animation-delay: 0.4s; }
+.rays-bottom .ray-4 { left: 55%; transform: rotate(80deg); animation-delay: 0.6s; }
+.rays-bottom .ray-5 { left: 70%; transform: rotate(70deg); animation-delay: 0.8s; }
+.rays-bottom .ray-6 { left: 85%; transform: rotate(50deg); animation-delay: 1s; }
+.rays-bottom .ray-7 { left: 95%; transform: rotate(30deg); animation-delay: 1.2s; }
+
+/* 礼花筒样式 */
+.lihuatong {
+    width: 120px;
+    position: absolute;
+    top: 120px;
+    right: 120px;
+    cursor: pointer;
+    z-index: 5;
+    transform: rotate(-135deg);
+}
+
+/* 闪烁动画 */
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}

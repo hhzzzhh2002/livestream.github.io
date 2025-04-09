@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Capture</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        video {
+            width: 640px;
+            height: 480px;
+            border: 2px solid #000;
+        }
+        canvas {
+            display: none;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay></video>
+    <canvas id="canvas"></canvas>
+    <button id="capture">截图并跳转</button>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture');
+
+        // 访问摄像头
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing camera: ", err);
+                alert("无法访问摄像头，请检查权限或设备！");
+            });
+
+        // 截图并跳转
+        captureButton.addEventListener('click', () => {
+            // 设置 canvas 大小与视频相同
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // 绘制视频当前帧到 canvas
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // 将截图转换为 base64 格式
+            const imageData = canvas.toDataURL('image/png');
+
+            // 将图片数据存储到 localStorage
+            localStorage.setItem('capturedImage', imageData);
+
+            // 停止摄像头
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+
+            // 跳转到 shape.html
+            window.location.href = 'shape.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Shape with Captured Image</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            margin: 0;
+        }
+
+        .shape-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transform: rotateX(45deg) rotateY(45deg);
+            transition: transform 0.5s;
+            animation: rotate 10s infinite linear;
+        }
+
+        .cube, .tetrahedron, .sphere {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+        }
+
+        .tetrahedron {
+            transform: translateZ(-100px);
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-size: 1200px 200px;
+            border: 1px solid #000;
+            opacity: 0.9;
+        }
+
+        .cube .front  { transform: translateZ(100px); background-position: 0 0; }
+        .cube .right  { transform: rotateY(90deg) translateZ(100px); background-position: -200px 0; }
+        .cube .back   { transform: rotateY(180deg) translateZ(100px); background-position: -400px 0; }
+        .cube .left   { transform: rotateY(-90deg) translateZ(100px); background-position: -600px 0; }
+        .cube .top    { transform: rotateX(90deg) translateZ(100px); background-position: -800px 0; }
+        .cube .bottom { transform: rotateX(-90deg) translateZ(100px); background-position: -1000px 0; }
+
+        .tetrahedron .face1 { 
+            transform: rotateX(-35.26deg) translateZ(115px); 
+            background-position: 0 0; 
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .tetrahedron .face2 { 
+            transform: rotateX(35.26deg) translateZ(115px); 
+            background-position: -200px 0; 
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .tetrahedron .face3 { 
+            transform: rotateY(90deg) rotateX(35.26deg) translateZ(115px); 
+            background-position: -400px 0; 
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .tetrahedron .face4 { 
+            transform: rotateY(-90deg) rotateX(35.26deg) translateZ(115px); 
+            background-position: -600px 0; 
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .sphere .face1 { transform: rotateY(0deg) rotateX(0deg) translateZ(100px); background-position: 0 0; border-radius: 50%; }
+        .sphere .face2 { transform: rotateY(45deg) rotateX(0deg) translateZ(100px); background-position: -150px 0; border-radius: 50%; }
+        .sphere .face3 { transform: rotateY(90deg) rotateX(0deg) translateZ(100px); background-position: -300px 0; border-radius: 50%; }
+        .sphere .face4 { transform: rotateY(135deg) rotateX(0deg) translateZ(100px); background-position: -450px 0; border-radius: 50%; }
+        .sphere .face5 { transform: rotateY(180deg) rotateX(0deg) translateZ(100px); background-position: -600px 0; border-radius: 50%; }
+        .sphere .face6 { transform: rotateY(225deg) rotateX(0deg) translateZ(100px); background-position: -750px 0; border-radius: 50%; }
+        .sphere .face7 { transform: rotateY(270deg) rotateX(0deg) translateZ(100px); background-position: -900px 0; border-radius: 50%; }
+        .sphere .face8 { transform: rotateY(315deg) rotateX(0deg) translateZ(100px); background-position: -1050px 0; border-radius: 50%; }
+
+        @keyframes rotate {
+            from { transform: rotateX(45deg) rotateY(45deg); }
+            to { transform: rotateX(45deg) rotateY(405deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="shapeSelector">切换形状: </label>
+        <input type="range" id="shapeSelector" min="0" max="2" value="0" step="1">
+    </div>
+    <div class="shape-container">
+        <div class="cube">
+            <div class="face front"></div>
+            <div class="face right"></div>
+            <div class="face back"></div>
+            <div class="face left"></div>
+            <div class="face top"></div>
+            <div class="face bottom"></div>
+        </div>
+        <div class="tetrahedron">
+            <div class="face face1"></div>
+            <div class="face face2"></div>
+            <div class="face face3"></div>
+            <div class="face face4"></div>
+        </div>
+        <div class="sphere">
+            <div class="face face1"></div>
+            <div class="face face2"></div>
+            <div class="face face3"></div>
+            <div class="face face4"></div>
+            <div class="face face5"></div>
+            <div class="face face6"></div>
+            <div class="face face7"></div>
+            <div class="face face8"></div>
+        </div>
+    </div>
+
+    <script>
+        const shapeContainer = document.querySelector('.shape-container');
+        const shapeSelector = document.getElementById('shapeSelector');
+        const cube = document.querySelector('.cube');
+        const tetrahedron = document.querySelector('.tetrahedron');
+        const sphere = document.querySelector('.sphere');
+
+        // 从 localStorage 获取截图
+        const capturedImage = localStorage.getItem('capturedImage');
+        const faces = document.querySelectorAll('.face');
+
+        if (capturedImage) {
+            faces.forEach(face => {
+                face.style.backgroundImage = `url(${capturedImage})`;
+            });
+
+            // 动态调整 background-size
+            const img = new Image();
+            img.src = capturedImage;
+            img.onload = function() {
+                const faceWidth = 200;
+                const totalWidth = faceWidth * 6;
+                const scale = totalWidth / img.width;
+                const backgroundSize = `${totalWidth}px ${img.height * scale}px`;
+
+                faces.forEach(face => {
+                    face.style.backgroundSize = backgroundSize;
+                });
+            };
+        }
+
+        // 滑块切换形状
+        shapeSelector.addEventListener('input', function() {
+            const shapeIndex = parseInt(this.value);
+            cube.style.display = shapeIndex === 0 ? 'block' : 'none';
+            tetrahedron.style.display = shapeIndex === 1 ? 'block' : 'none';
+            sphere.style.display = shapeIndex === 2 ? 'block' : 'none';
+        });
+
+        // 初始设置
+        cube.style.display = 'block';
+        tetrahedron.style.display = 'none';
+        sphere.style.display = 'none';
+    </script>
+</body>
+</html>
