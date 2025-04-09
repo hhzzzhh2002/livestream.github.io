@@ -33,7 +33,6 @@
     }
 
     #cameraVideo { z-index: 1; transform: scaleX(-1); }
-    #waitVideo { z-index: 2; }
     #step2Video { z-index: 3; opacity: 0; }
     canvas { z-index: 4; }
 
@@ -83,9 +82,6 @@
 <body>
   <div class="container">
     <video id="cameraVideo" autoplay muted></video>
-    <video id="waitVideo" autoplay muted loop playsinline>
-      <source src="videos/wait.mp4" type="video/mp4">
-    </video>
     <video id="step2Video" muted playsinline>
       <source src="videos/step2.mp4" type="video/mp4">
     </video>
@@ -102,14 +98,29 @@
   <script>
     async function setupCamera() {
       const video = document.getElementById('cameraVideo');
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1080 }, height: { ideal: 1920 } },
-        audio: false
-      });
-      video.srcObject = stream;
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user", // 强制使用前置摄像头
+            width: { ideal: 1080 },
+            height: { ideal: 1920 }
+          },
+          audio: false
+        });
+        video.srcObject = stream;
+
+        // 调试：打印摄像头信息
+        const videoTrack = stream.getVideoTracks()[0];
+        console.log("当前摄像头:", videoTrack.label);
+        alert("当前摄像头: " + videoTrack.label); // 在手机上弹出提示
+      } catch (err) {
+        console.error("摄像头启用失败:", err);
+        alert("摄像头启用失败: " + err.message);
+      }
       return new Promise(resolve => {
         video.onloadedmetadata = () => {
           video.play();
+          console.log("视频分辨率:", video.videoWidth, video.videoHeight);
           resolve(video);
         };
       });
@@ -127,7 +138,6 @@
       const canvas = document.getElementById('canvas');
       const ctx = canvas.getContext('2d');
 
-      const waitVideo = document.getElementById('waitVideo');
       const step2Video = document.getElementById('step2Video');
       const instruction = document.getElementById('instruction');
       const progressContainer = document.getElementById('progressContainer');
@@ -141,7 +151,6 @@
 
       let faceDetectedFrames = 0;
       const requiredFrames = 50;
-      let lastFaceDetectionTime = Date.now();
       let progressCompleted = false;
 
       step2Video.addEventListener('ended', () => {
@@ -167,8 +176,6 @@
         ctx.translate(-canvas.width, 0);
 
         if (resizedDetections.length > 0) {
-          lastFaceDetectionTime = Date.now();
-          waitVideo.style.opacity = '0';
           faceDetectedFrames++;
 
           resizedDetections.forEach(result => {
@@ -192,12 +199,8 @@
               ctx.fill();
             });
           });
-
         } else {
-          if (Date.now() - lastFaceDetectionTime > 2000) {
-            waitVideo.style.opacity = '1';
-            faceDetectedFrames = 0;
-          }
+          faceDetectedFrames = 0; // 如果没有检测到人脸，重置计数
         }
 
         ctx.restore();
@@ -209,7 +212,6 @@
           progressCompleted = true;
           instruction.style.opacity = '0';
           progressContainer.style.opacity = '0';
-          waitVideo.style.opacity = '0';
           canvas.style.opacity = '0';
           video.style.opacity = '0';
           step2Video.currentTime = 0;
@@ -219,7 +221,6 @@
           setTimeout(() => {
             instruction.style.display = 'none';
             progressContainer.style.display = 'none';
-            waitVideo.style.display = 'none';
             canvas.style.display = 'none';
             video.style.display = 'none';
           }, 800);
