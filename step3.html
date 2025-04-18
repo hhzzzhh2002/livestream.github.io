@@ -305,6 +305,9 @@
             height: 100%;
             z-index: 3;
             pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         #modelControls {
             position: absolute;
@@ -589,7 +592,7 @@
         }
         #liveButton {
             position: absolute;
-            bottom: 500px; /* 调整位置在中间偏下 */
+            bottom: 700px;
             left: 50%;
             transform: translateX(-50%);
             padding: 15px 30px;
@@ -605,13 +608,137 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             z-index: 30;
-            display: none; /* 默认隐藏 */
+            display: none;
             text-align: center;
-            line-height: 1.5; /* 控制两行文字的间距 */
+            line-height: 1.5;
         }
         #liveButton:hover {
             transform: translateX(-50%) translateY(-3px);
             box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 针对手机屏幕的调整 */
+        @media only screen and (max-width: 428px) {
+            #container {
+                width: 100vw;
+                height: 100vh;
+                max-width: 428px;
+                max-height: 926px;
+            }
+            video {
+                top: 10px;
+                right: 10px;
+                width: 120px;
+                height: 213px;
+            }
+            #textOverlay {
+                bottom: 50px;
+                font-size: 20px;
+            }
+            #textOverlay .title {
+                font-size: 28px;
+                padding: 5px 15px;
+            }
+            #textOverlay .price {
+                font-size: 18px;
+                padding: 4px 10px;
+            }
+            #gesturePrompt {
+                top: 50px;
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+            #gestureIcon {
+                font-size: 24px;
+            }
+            .watermark {
+                font-size: 12px;
+                bottom: 10px;
+                right: 10px;
+            }
+            #manualCaptureBtn {
+                bottom: 20px;
+                right: 10px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            #backgroundUploadContainer,
+            #imageUploadContainer {
+                top: 10px;
+                left: 10px;
+            }
+            #imageUploadContainer {
+                left: 150px;
+            }
+            .uploadLabel,
+            .imageUploadLabel {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            #showGalleryBtn {
+                top: 10px;
+                right: 10px;
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            #modelControls {
+                bottom: 60px;
+                right: 10px;
+                padding: 5px;
+            }
+            .controlLabel {
+                font-size: 10px;
+            }
+            .controlSlider {
+                width: 80px;
+            }
+            #liveButton {
+                bottom: 200px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            #threeJsRenderer {
+                width: 100%;
+                height: 100%;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            #posterImage {
+                max-width: 90%;
+                max-height: 70%;
+            }
+            .posterButton {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            #debugInfo {
+                font-size: 10px;
+                max-width: 300px;
+            }
+            #imageGalleryGrid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+            #galleryTitle {
+                font-size: 18px;
+            }
+            #closeGalleryBtn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .popupButton {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            #popupCounter {
+                font-size: 12px;
+            }
+            .navButton {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -755,21 +882,21 @@
         let popupElements = [];
 
         function preloadPopupImages() {
-    const basePath = './elements/';
-    const totalImages = 97; // 总图片数量，从 1 到 97
-    const numToShow = 20;  // 要随机展示的图片数量
-    const allImageIndices = Array.from({ length: totalImages }, (_, i) => i + 1); // 1 到 97 的索引数组
+            const basePath = './elements/';
+            const totalImages = 97;
+            const numToShow = 20;
+            const allImageIndices = Array.from({ length: totalImages }, (_, i) => i + 1);
 
-    for (let i = 0; i < numToShow && allImageIndices.length > 0; i++) {
-        const randomIndex = Math.floor(Math.random() * allImageIndices.length);
-        const selectedIndex = allImageIndices[randomIndex];
-        const imgPath = `${basePath}5 (${selectedIndex}).png`;
-        const img = new Image();
-        img.src = imgPath;
-        popupImages.push(img);
-        allImageIndices.splice(randomIndex, 1);
-    }
-}
+            for (let i = 0; i < numToShow && allImageIndices.length > 0; i++) {
+                const randomIndex = Math.floor(Math.random() * allImageIndices.length);
+                const selectedIndex = allImageIndices[randomIndex];
+                const imgPath = `${basePath}5 (${selectedIndex}).png`;
+                const img = new Image();
+                img.src = imgPath;
+                popupImages.push(img);
+                allImageIndices.splice(randomIndex, 1);
+            }
+        }
 
         function createPopupElements() {
             popupImages.forEach((img, index) => {
@@ -778,7 +905,7 @@
                 element.className = 'popup-element';
                 element.style.left = '50%';
                 element.style.top = '50%';
-                const randomSize = (50 + Math.random() * 100) * 3 * 0.8; // 调大3倍后缩放0.8倍
+                const randomSize = (50 + Math.random() * 100) * 3 * 0.8;
                 element.style.width = `${randomSize}px`;
                 element.style.height = `${randomSize}px`;
                 popupElementsContainer.appendChild(element);
@@ -791,10 +918,10 @@
                 setTimeout(() => {
                     element.classList.add('active');
                     const angle = Math.random() * 2 * Math.PI;
-                    const distanceX = 100 + Math.random() * 1000; // 左右分散范围
-                    const distanceY = 100 + Math.random() * 1800; // 上下分散范围更夸张
+                    const distanceX = 100 + Math.random() * 1000;
+                    const distanceY = 100 + Math.random() * 1800;
                     const xOffset = Math.cos(angle) * distanceX;
-                    const yOffset = Math.sin(angle) * distanceY * (Math.random() < 0.5 ? -1 : 1); // 上下随机正负
+                    const yOffset = Math.sin(angle) * distanceY * (Math.random() < 0.5 ? -1 : 1);
                     element.style.transform = `translate(${xOffset - 50}px, ${yOffset - 50}px) scale(${1 + Math.random() * 0.5})`;
                     element.style.opacity = '1';
                 }, index * 150);
@@ -1031,9 +1158,9 @@
         });
 
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, 1080 / 1920, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
-        renderer.setSize(1080, 1920);
+        renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.physicallyCorrectLights = true;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.0;
@@ -1082,6 +1209,7 @@
             model = gltf.scene;
             scene.add(model);
             log("模型加载成功！");
+            // 调整模型初始位置到屏幕中心
             model.position.set(0, 0, 0);
             if (randomModel.path === './venus1.gltf') {
                 model.scale.set(2, 2, 2);
@@ -1099,7 +1227,9 @@
                     });
                 }
             });
-            camera.position.set(0, 1, 2);
+            // 调整相机位置以确保模型在中心可见
+            camera.position.set(0, 0, 5);
+            camera.lookAt(0, 0, 0);
             startRotation();
         }, undefined, (error) => {
             log('模型加载失败:' + error);
@@ -1159,6 +1289,18 @@
             renderer.render(scene, camera);
         }
         animate();
+
+        // 窗口大小调整时更新渲染器和相机
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            if (model) {
+                model.position.set(0, 0, 0); // 确保模型始终居中
+            }
+        });
 
         function applyTexture() {
             canvas.width = video.videoWidth;
@@ -1443,11 +1585,15 @@
             const liveButton = document.getElementById('liveButton');
             setTimeout(() => {
                 liveButton.style.display = 'block';
-            }, 5000); // 5秒后显示
+            }, 5000);
             liveButton.addEventListener('click', () => {
-                window.location.href = 'step4.html'; // 修改为跳转到 step4.html
+                window.location.href = 'step4.html';
             });
+            // Add 30-second auto-redirect
+            setTimeout(() => {
+                window.location.href = 'step4.html';
+            }, 30000);
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92d3e6da6e368978',t:'MTc0NDEzNzcxNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92d3fd697b1c747a',t:'MTc0NDEzODY0MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9325341afde14594',t:'MTc0NDk5MDIyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
